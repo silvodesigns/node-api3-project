@@ -39,7 +39,7 @@ router.get('/', (req, res) => {
   })
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', validateUserId, (req, res) => {
   // do your magic!
   usersDb.getById(req.params.id)
   .then(user => {
@@ -102,6 +102,20 @@ router.put('/:id', (req, res) => {
 
 function validateUserId(req, res, next) {
   // do your magic!
+  const {id} = req.params;
+  usersDb.getById(id)
+  .then(user => {
+    if(user){
+      req.user = user;
+      req.id = id;
+      console.log(user, "from middleware");
+      next();
+    }
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({"message": "Invalid Id"});
+  })
 }
 
 function validateUser(req, res, next) {

@@ -2,6 +2,8 @@ const express = require('express');
 //imports user's route into our server
 const userRoutes = require('./users/userRouter');
 const server = express();
+server.use(logger);
+
 
 
 
@@ -11,7 +13,6 @@ server.get('/', (req, res) => {
 
 //hook up server with mini server for user routes
 server.use('/users', userRoutes);
-server.use(logger);
 
 
 
