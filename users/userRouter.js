@@ -55,7 +55,18 @@ router.get('/:id', (req, res) => {
 
 router.get('/:id/posts', (req, res) => {
   // do your magic!
+  const {id} = req.params;
+  usersDb.getUserPosts(id)
+  .then( usersposts => {
+    res.status(200);
+    res.json(usersposts);
+  })
+  .catch(()=>{
+    res.status(404);
+    res.json({"message": "we could not find posts for this user"});
+  })
 });
+
 
 router.delete('/:id', (req, res) => {
   // do your magic!
