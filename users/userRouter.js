@@ -12,6 +12,7 @@ router.post('/:id/posts', (req, res) => {
 
 router.get('/', (req, res) => {
   // do your magic!
+  res.status(200).send("hello from inside user's route");
 });
 
 router.get('/:id', (req, res) => {
