@@ -4,12 +4,8 @@ const router = express.Router();
 
 router.use(express.json());
 
-router.post('/', (req, res) => {
+router.post('/',  validateUser, (req, res) => {
   // do your magic!
-  const {name} = req.body;
-  if(!name){
-    res.status(400).json({errorMessage: "Please provide a name to insert"})
-  } else {
     usersDb.insert(req.body)
     .then( name => {
       res.status(201);
@@ -19,7 +15,7 @@ router.post('/', (req, res) => {
       res.status(500);
       res.json({"message": "could not post the given name to databases"})
     })
-  }
+  
 });
 
 router.post('/:id/posts', (req, res) => {
@@ -53,7 +49,7 @@ router.get('/:id', validateUserId, (req, res) => {
   
 });
 
-router.get('/:id/posts', (req, res) => {
+router.get('/:id/posts', validateUserId, (req, res) => {
   // do your magic!
   const {id} = req.params;
   usersDb.getUserPosts(id)
@@ -68,7 +64,7 @@ router.get('/:id/posts', (req, res) => {
 });
 
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validateUserId, (req, res) => {
   // do your magic!
   usersDb.remove(req.params.id)
   .then(user => {
@@ -81,7 +77,7 @@ router.delete('/:id', (req, res) => {
   })
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validateUserId, (req, res) => {
   // do your magic!
   const {id} = req.params;
 
@@ -114,12 +110,19 @@ function validateUserId(req, res, next) {
   })
   .catch(err => {
     console.log(err);
-    res.status(500).json({"message": "Invalid Id"});
+    res.status(400).json({"message": "Invalid user Id"});
   })
 }
 
 function validateUser(req, res, next) {
   // do your magic!
+  if(!req.body){
+    res.status(400).json({"message": "missing users data"})
+  } else if(!req.body.name){
+    res.status(400).json({"message": "missing required name field"})
+  } else {
+    next();
+  }
 }
 
 function validatePost(req, res, next) {
