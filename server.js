@@ -11,12 +11,22 @@ server.get('/', (req, res) => {
 
 //hook up server with mini server for user routes
 server.use('/users', userRoutes);
+server.use(logger);
+
 
 
 server.listen('4000', ()=> {
-  console.log("Server listening on port 5000");
+  console.log("Server listening on port 4000");
 });
 
 //custom middleware
-function logger(req, res, next) {}
+function logger(req, res, next) {
+  console.log(
+    `[${new Date().toISOString()}] ${req.method} to ${req.url} from ${req.get(
+      'Origin'
+    )}`
+  );
+
+  next();
+}
 
