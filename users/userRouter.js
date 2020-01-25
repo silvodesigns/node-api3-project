@@ -6,6 +6,20 @@ router.use(express.json());
 
 router.post('/', (req, res) => {
   // do your magic!
+  const {name} = req.body;
+  if(!name){
+    res.status(400).json({errorMessage: "Please provide a name to insert"})
+  } else {
+    usersDb.insert(req.body)
+    .then( name => {
+      res.status(201);
+      res.json(name);
+    })
+    .catch(()=>{
+      res.status(500);
+      res.json({"message": "could not post the given name to databases"})
+    })
+  }
 });
 
 router.post('/:id/posts', (req, res) => {
