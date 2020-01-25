@@ -83,6 +83,19 @@ router.delete('/:id', (req, res) => {
 
 router.put('/:id', (req, res) => {
   // do your magic!
+  const {id} = req.params;
+
+
+  usersDb.update(id, req.body)
+  .then( updated => {
+    res.status(201);
+    res.json(updated);
+  })
+  .catch(()=>{
+    res.status(500);
+    res.json({"message": "Could not update the record"})
+  })
+
 });
 
 //custom middleware
