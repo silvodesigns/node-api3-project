@@ -1,6 +1,8 @@
 const express = require('express');
-
+const usersDb= require('./userDb');
 const router = express.Router();
+
+router.use(express.json());
 
 router.post('/', (req, res) => {
   // do your magic!
@@ -12,11 +14,29 @@ router.post('/:id/posts', (req, res) => {
 
 router.get('/', (req, res) => {
   // do your magic!
-  res.status(200).send("hello from inside user's route");
+  usersDb.get()
+  .then(users => {
+    res.status(200);
+    res.json(users);
+  })
+  .catch(()=>{
+    res.status(404);
+    res.json({"message": "The users could not be retrieved"})
+  })
 });
 
 router.get('/:id', (req, res) => {
   // do your magic!
+  usersDb.getById(req.params.id)
+  .then(user => {
+    res.status(200);
+    res.json(user);
+  })
+  .catch(()=> {
+    res.status(404);
+    res.json({"messsege": "we could not find the specified user"});
+  })
+  
 });
 
 router.get('/:id/posts', (req, res) => {
