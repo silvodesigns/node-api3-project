@@ -70,6 +70,15 @@ router.get('/:id/posts', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // do your magic!
+  usersDb.remove(req.params.id)
+  .then(user => {
+    res.status(200);
+    res.json({"message": "user with the specified id was removed successfully"});
+  })
+  .catch(()=> {
+    res.status(500);
+    res.json({"errorMessage": "The user with the specified id could not be removed"});
+  })
 });
 
 router.put('/:id', (req, res) => {
